@@ -18,6 +18,7 @@ const PdfView = () => {
 
   const property = useSelector(state => state.property.properties)
   console.log('---PdfView.js---', property)
+  console.log('---PdfView.js---', property)
   const exportPdf = () => {
     window.print();
   }
@@ -40,18 +41,56 @@ const PdfView = () => {
           </div>
           <br />
           <br />
-          <div className="text-left">
-            <span>Dear Dr.</span> <span>{ property.first_name}&nbsp;&nbsp;{property.last_name}</span>
-          </div>
-          <br />
-          <div className="text-left">
-            We are pleased to inform you that your manuscript “<span>{ property.manuscript_title}</span>” has been accepted <br />
-            for publication in the Medical Research Archives. Please review the following reviewer <br/>
-            comments regarding any revisions which are requested. If possible, please submit the final <br/>
-            version of your manuscript within 7 days so we may begin the copyediting process. You will <br/>
-            receive a separate email with an invoice for the publication fee, which is also due prior to<br/>
-            copyediting. If you have any questions for the reviewers or editor please do not hesitate to ask.
-          </div>
+          {
+            property.editorial_decision == 'Accepted' &&
+            <div>
+              <div className="text-left">
+                <span>Dear Dr.</span> <span>{ property.first_name}&nbsp;&nbsp;{property.last_name}</span>
+              </div>
+              <div className="text-left">
+                We are pleased to inform you that your manuscript “<span>{ property.manuscript_title}</span>” has been accepted
+                for publication in the Medical Research Archives. Please review the following reviewer
+                comments regarding any revisions which are requested. If possible, please submit the final
+                version of your manuscript within 7 days so we may begin the copyediting process. You will
+                receive a separate email with an invoice for the publication fee, which is also due prior to
+                copyediting. If you have any questions for the reviewers or editor please do not hesitate to ask.
+              </div>
+            </div>
+          }
+
+          {
+            property.editorial_decision == 'Revisions Required' &&
+            <div>
+              <div className="text-left">
+                <span>Dear Dr.</span> <span>{ property.first_name}&nbsp;&nbsp;{property.last_name}</span>
+              </div>
+              <div className="text-left">
+                We have completed peer-review of your manuscript titled “<span>{ property.manuscript_title}</span>”. In the 
+                following pages of this report you may find some revisions which have been requested by the 
+                reviewers. Upon submission of a revised version of the manuscript which implements these 
+                changes, the manuscript will be accepted for publication. If possible, please submit the final 
+                version of your manuscript within 7 days so we may begin the copyediting process. If you have 
+                any questions for the reviewers or editor please do not hesitate to ask.
+              </div>
+            </div>
+          }
+
+          {
+            property.editorial_decision == 'Rejected' &&
+            <div>
+              <div className="text-left">
+                <span>Dear Dr.</span> <span>{ property.first_name}&nbsp;&nbsp;{property.last_name}</span>
+              </div>
+              <div className="text-left">
+                We have completed peer-review of your manuscript titled “<span>{ property.manuscript_title}</span>”.
+                Unfortunately it has not been accepted for publication in the Medical Research Archives. In the
+                following pages of this report you may find some comments from the reviewers. You are
+                welcome to submit a different manuscript to the journal in the future. If you have any
+                questions for the reviewers or editor please do not hesitate to ask.
+              </div>
+            </div>
+          }
+
           <br />
           <br />
           <div className="text-left">Sincerely</div>
@@ -68,7 +107,14 @@ const PdfView = () => {
                 null 
                 :
                 <div className="text-left mb-10">
-                    {index_num++}.	Verify that all abbreviations are accompanied by the full term when first used, in both the abstract and the full text.
+                  {index_num++}.	The inline quoting numbers don't adhere to AMA style.<br />
+                  <div className="mt-10"><b>How to use AMA style for inline quoting</b></div>
+                  <br />
+                  References should be numbered in consecutive order in the text, tables, or figures.
+                  Use superscript numerals to cite material, e.g., 1    The first reference used in a written document is listed as 1 in the reference list.
+                  Where to place the superscript?  The superscript number 1  is inserted into the document immediately next to the fact, concept, or quotation being cited.  If citing more than one reference at the same point, separate the numbers with commas and no spaces between. 
+                  Example of AMA inline quoting:
+                  Finding treatments for breast cancer is a major goal for scientists.1,2 Some classes of drugs show more promise than others. Gradishar evaluated taxanes as a class.3 Other scientists have investigated individual drugs within this class, including Andre and Zielinski 2 and Joensuu and Gligorov. 4 Mita et al's investigation of cabazitaxel 5 seems to indicate a new role for this class of drugs.
                 </div>
             }
 
@@ -77,20 +123,7 @@ const PdfView = () => {
                 null 
                 :
                 <div className="text-left mb-10">
-                  <div>{index_num++}.	The English is not at the required level. Proofreading by a native English speaker is required.</div>
-                  <div>Recommended medical manuscript English proofreading services:</div>
-                  <div>•	Medical Journal Editors - <a href="https://www.medicaljournaleditors.com">https://www.medicaljournaleditors.com</a></div>
-                  <div>•	Peak Medical Editing - <a href="https://www.peakmedicalediting.com ">https://www.peakmedicalediting.com </a></div>
-                </div>  
-            }
-
-            {       
-              property.cbox_three === false ?
-                null 
-                :
-                <div className="text-left mb-10">
                   {index_num++}.	The reference section doesn’t meet AMA style requirements.<br />
-
                   <div className="mt-10"><b>AMA Style Guide</b></div>
                   <br />
                   AMA style reference lists are in numerical order, based on the order in which the sources were first cited in your assignment. Journal titles should be in italic font.
@@ -108,6 +141,19 @@ const PdfView = () => {
                   4.	Food safety fact sheet 51: food allergies. Queensland Health. March 2013. Accessed January 12, 2014. <a href="http://www.health.qld.gov.au/foodsafety/Documents/fs-51-allergies.pdf">http://www.health.qld.gov.au/foodsafety/Documents/fs-51-allergies.pdf</a><br />
                   5.	Shaparin N, Shah A, Gritsenko K. Pharmacological agents: opioids. In: Urman RD, Vadivelu N, eds. Perioperative Pain Management. Oxford University Press; 2013:29-37. Accessed November 25, 2012. <a href="http://jcu.eblib.com.au/patron/FullRecord.aspx?p=1274300">http://jcu.eblib.com.au/patron/FullRecord.aspx?p=1274300</a><br />
                 </div>
+
+            }
+
+            {       
+              property.cbox_three === false ?
+                null 
+                :
+                <div className="text-left mb-10">
+                  <div>{index_num++}.	The English is not at the required level. Proofreading by a native English speaker is required.</div>
+                  <div>Recommended medical manuscript English proofreading services:</div>
+                  <div>•	Medical Journal Editors - <a href="https://www.medicaljournaleditors.com">https://www.medicaljournaleditors.com</a></div>
+                  <div>•	Peak Medical Editing - <a href="https://www.peakmedicalediting.com ">https://www.peakmedicalediting.com </a></div>
+                </div>  
             }
             
             {
@@ -115,14 +161,7 @@ const PdfView = () => {
                 null 
                 :
                 <div className="text-left mb-10">
-                  {index_num++}.	The inline quoting numbers don't adhere to AMA style.<br />
-                  <div className="mt-10"><b>How to use AMA style for inline quoting</b></div>
-                  <br />
-                  References should be numbered in consecutive order in the text, tables, or figures.
-                  Use superscript numerals to cite material, e.g., 1    The first reference used in a written document is listed as 1 in the reference list.
-                  Where to place the superscript?  The superscript number 1  is inserted into the document immediately next to the fact, concept, or quotation being cited.  If citing more than one reference at the same point, separate the numbers with commas and no spaces between. 
-                  Example of AMA inline quoting:
-                  Finding treatments for breast cancer is a major goal for scientists.1,2 Some classes of drugs show more promise than others. Gradishar evaluated taxanes as a class.3 Other scientists have investigated individual drugs within this class, including Andre and Zielinski 2 and Joensuu and Gligorov. 4 Mita et al's investigation of cabazitaxel 5 seems to indicate a new role for this class of drugs.
+                    {index_num++}.	Verify that all abbreviations are accompanied by the full term when first used, in both the abstract and the full text.
                 </div>
             }
 

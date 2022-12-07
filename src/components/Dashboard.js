@@ -41,7 +41,7 @@ const Dashboard = ({setProperty}) => {
     cbox_thirteen :false,
     cbox_fourteen :false,
     cbox_fifteen :false,
-    comments: [{index:'', text:''}]
+    comments: []
   });
 
   const onChange = (e) =>{
